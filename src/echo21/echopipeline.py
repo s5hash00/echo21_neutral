@@ -528,7 +528,7 @@ class pipeline():
                 param_grid = list(product(self.fLy,self.sLy,self.fX,self.wX,self.fesc,self.Tmin_vir,self.t_star))            
 
             T21_partial = []
-            xHI_partial = []
+            xHI_partial = []    #Added to save xHI for each model as well as T21
             if self.cpu_ind==0:
                 #Master CPU
                 n_mod = len(param_grid)
@@ -550,7 +550,7 @@ class pipeline():
                     for (fly, sly, fx, wx, fesc, tmin_vir) in partial_param:
                         result = cdm_phy_cd(self.Ho,self.Om_m,self.Om_b,self.sig8,self.ns,self.Tcmbo,self.Yp, fly,sly,fx,wx,fesc,tmin_vir,self.hmf,self.mdef,xe_da[-1] , Tk_da[-1], self.Z_eval, Z_temp)
                         T21_partial.append((fly, sly, fx, wx, fesc, tmin_vir, result[0]) )
-                        xHI_partial.append((fly, sly, fx, wx, fesc, tmin_vir, result[1]) )
+                        xHI_partial.append((fly, sly, fx, wx, fesc, tmin_vir, result[1]) )     #changes made to misc so that xHI is also output by cdm_phy_cd
                         self.comm.send(1, dest=0, tag=77)
                 elif self.sfrd_type=='semi-emp':
                     for (fly, sly, fx, wx, fesc, tmin_vir,t_star) in partial_param:
@@ -588,7 +588,7 @@ class pipeline():
                         i, j, k, l, m, n = fLy_index[fly_val], sLy_index[sly_val], fX_index[fx_val], wX_index[w_val], fesc_index[fesc_val], Tmin_index[tmin_val]
                         T21_cd[i, j, k, l, m, n, :] = val
                 
-                    # Fill xHI array
+                    # Fill xHI array, just mirroring logic for T21
                     for fly_val, sly_val, fx_val, w_val, fesc_val, tmin_val, val in all_xHI:
                         i, j, k, l, m, n = fLy_index[fly_val], sLy_index[sly_val], fX_index[fx_val], wX_index[w_val], fesc_index[fesc_val], Tmin_index[tmin_val]
                         xHI_cd[i, j, k, l, m, n, :] = val

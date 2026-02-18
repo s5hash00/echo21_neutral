@@ -463,6 +463,13 @@ class pipeline():
                 except:
                     pass
 
+                tau_e = None
+                try:
+                    tau_e = myobj.reion_tau(50)     #To calculate tau even if reionisation is not complete 
+                except:
+                    pass
+
+
                 z50 = None
                 try:
                     idx = np.where(np.abs(Q_Hii-0.5)<=0.01)[0][0]
@@ -471,7 +478,7 @@ class pipeline():
                     try:
                         idx = np.where(Q_Hii>=0.98)[0][0]
                         z100 = Z_default[idx]-1
-                        tau_e = myobj.reion_tau(50)
+                        #tau_e = myobj.reion_tau(50)
                     except:
                         print('\n{:.1f} % universe reionised by {:.1f}'.format(100*Q_Hii[-1], Z_temp[-1]-1))
                 except:
@@ -483,7 +490,11 @@ class pipeline():
                     myfile.write('\n50% reionisation complete at z = {:.2f}'.format(z50))
                     if z100!=None:
                         myfile.write("\nReionisation complete at z = {:.2f}".format(z100))
-                        myfile.write("\nTotal Thomson-scattering optical depth = {:.4f}".format(tau_e))
+                        #myfile.write("\nTotal Thomson-scattering optical depth = {:.4f}".format(tau_e))
+
+                if tau_e != None:
+                    myfile.write("\nTotal Thomson-scattering optical depth = {:.4f}".format(tau_e))      #Adding to print tau in summary file, if it is computed successfully.
+
 
                 try: myfile.write('\n\nStrongest 21-cm signal is {:.2f} mK, observed at z = {:.2f}'.format(max_T21,max_z-1))
                 except: pass

@@ -71,7 +71,8 @@ def cdm_phy_cd(Ho,Om_m,Om_b,sig8,ns,Tcmbo,Yp, fLy,sLy,fX,wX,fesc,Tmin_vir,hmf,md
 
     xHI_cd = (1 - Q_cd) * (1 - xe_cd)   # Neutral hydrogen fraction
     Ts_cd= myobj_cd.hyfi_spin_temp(Z=Z_temp,xe=xe_cd,Tk=Tk_cd)
-    return myobj_cd.hyfi_twentyone_cm(Z=Z_temp,xe=xe_cd,Q=Q_cd,Ts=Ts_cd), xHI_cd
+    tau_cd = myobj_cd.reion_tau(50)
+    return myobj_cd.hyfi_twentyone_cm(Z=Z_temp,xe=xe_cd,Q=Q_cd,Ts=Ts_cd), xHI_cd, tau_cd
 
 def cdm_emp_cd(Ho,Om_m,Om_b,sig8,ns,Tcmbo,Yp, fLy,sLy,fX,wX,fesc,a_sfrd, xe_init,Tk_init, self_Z_eval,Z_temp):
     '''
@@ -140,7 +141,10 @@ def cdm_phy_full(Ho, Om_m, Om_b, sig8, ns, Tcmbo, Yp, fLy, sLy, fX, wX , fesc, T
 
     Ts = myobj.hyfi_spin_temp(Z=Z_temp,xe=xe,Tk=Tk)
     xHI = (1 - Q_Hii) * (1 - xe)
-    return myobj.hyfi_twentyone_cm(Z=Z_temp,xe=xe,Q=Q_Hii,Ts=Ts), xHI
+    tau = myobj.reion_tau(50) #Adding tau as an output for cosmo and astro params being varied
+
+
+    return myobj.hyfi_twentyone_cm(Z=Z_temp,xe=xe,Q=Q_Hii,Ts=Ts), xHI, tau
 
 def cdm_semi_full(Ho, Om_m, Om_b, sig8, ns, Tcmbo, Yp, fLy, sLy, fX, wX , fesc, Tmin_vir, tstar, hmf, mdef, self_Z_eval, Z_temp):
     '''
